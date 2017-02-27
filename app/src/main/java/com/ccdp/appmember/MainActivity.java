@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     MemberAPI memberAPI;
     UserAPI userAPI;
     private ProgressDialog mProgressDialog;
-    String token;
+    String token,username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         token = settings.getString("com.ccdp.appmember.token","");
+        username = settings.getString("com.ccdp.appmember.username","");
+
+        Log.d("MainActivity : ",username);
 
         listView = (ListView)findViewById(R.id.lvnotes);
 
@@ -144,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout(){
+        userAPI = retrofit.create(UserAPI.class);
         Call<LoginResult> call = userAPI.logout(token);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
@@ -167,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 }catch (Exception e){
                     if (mProgressDialog.isShowing()) {
